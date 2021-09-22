@@ -20,15 +20,21 @@ class UI{
             <td>${movie.title}</td>
             <td>${movie.author}</td>
             <td>${movie.imdb}</td>
-            <td><a href="#">X</a></td>
+            <td><a href="#" class="delete">X</a></td>
         `;
 
         list.appendChild(row);
         
     }
+
+    removeMovie(target){
+        if(target.className === 'delete'){
+            target.parentElement.parentElement.remove();
+        }
+    }
 }
 
-
+//event listener for add 
 document.getElementById('movie-form').addEventListener('submit', (e) =>{
     const title = document.getElementById('title').value;
     const author = document.getElementById('author').value;
@@ -47,6 +53,19 @@ document.getElementById('movie-form').addEventListener('submit', (e) =>{
     //add movie to list
     ui.addMovie(movie);
 
+
+    e.preventDefault();
+});
+
+
+//event listener for remove
+document.getElementById('movie-list').addEventListener('click', (e) => {
+    // console.log(e.target);
+
+    const ui = new UI();
+
+    
+    ui.removeMovie(e.target);
 
     e.preventDefault();
 });
