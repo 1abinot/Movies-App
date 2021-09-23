@@ -32,6 +32,35 @@ class UI{
             target.parentElement.parentElement.remove();
         }
     }
+
+    showAlert(msg, className){
+        const div = document.createElement('div');
+
+        div.className = `alert ${className}`;
+
+        
+        const txtNode = document.createTextNode(msg);
+
+        div.appendChild(txtNode);
+
+    
+        const row = document.querySelector('.row');
+
+        
+        const form = document.getElementById('movie-form');
+
+        row.insertBefore(div, form)
+        
+        
+        setTimeout(() => {
+            document.querySelector('.alert').remove();
+            document.getElementById('submit').disabled = false;
+        }, 2000);
+
+        document.getElementById('submit').disabled = true;
+
+
+    }
 }
 
 //event listener for add 
@@ -40,19 +69,21 @@ document.getElementById('movie-form').addEventListener('submit', (e) =>{
     const author = document.getElementById('author').value;
     const imdb = parseInt(document.getElementById('imdb').value);
 
-    if(title === '' || author === '' || isNaN(imdb)){
-        alert('please fill all the fields');
-    }
-
-    //create a movie object
-    const movie = new Movie(title, author, imdb);
-
     //create an ui object
     const ui = new UI();
 
-    //add movie to list
-    ui.addMovie(movie);
+    if(title === '' || author === '' || isNaN(imdb)){
+        ui.showAlert('Please fill in all fields', 'error')
+    }else{
+        //create a movie object
+        const movie = new Movie(title, author, imdb);
 
+        //add movie to list
+        ui.addMovie(movie);
+
+        ui.showAlert(`Movie ${movie.title} added!`, 'success')
+        
+    }
 
     e.preventDefault();
 });
@@ -66,6 +97,8 @@ document.getElementById('movie-list').addEventListener('click', (e) => {
 
     
     ui.removeMovie(e.target);
+
+    ui.showAlert('Movie removed!', 'success')
 
     e.preventDefault();
 });
