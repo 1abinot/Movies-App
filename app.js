@@ -59,7 +59,13 @@ class UI{
 
         document.getElementById('submit').disabled = true;
 
+    }
 
+    clearFields(){
+        document.getElementById('title').value = '';
+        document.getElementById('author').value = '';
+        document.getElementById('imdb').value = '';
+        document.getElementById('title').focus();
     }
 }
 
@@ -83,6 +89,7 @@ document.getElementById('movie-form').addEventListener('submit', (e) =>{
 
         ui.showAlert(`Movie ${movie.title} added!`, 'success')
         
+        ui.clearFields();
     }
 
     e.preventDefault();
