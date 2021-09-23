@@ -69,6 +69,61 @@ class UI{
     }
 }
 
+
+class Store{
+    static getMovies(){
+        let movies;
+        if(localStorage.getItem('movies') === null){
+            movies = [];
+        }else{
+            movies = JSON.parse(localStorage.getItem('movies'));
+        }
+
+        return movies;
+    }
+  
+
+    static displayMovie(){
+        const ui = new UI();
+
+        let movies = Store.getMovies();
+
+        movies.forEach(movie => {
+            ui.addMovie(movie);
+        });
+    }
+
+    static addMovie(movie){
+        //get movies from LS
+        let movies = Store.getMovies();
+
+        //push new movie into array movies
+        movies.push(movie);
+
+        //store the movies in LS
+        localStorage.setItem('movies', JSON.stringify(movies));
+    }
+
+    
+    static removeMovie(imdb){
+        imdb = parseInt(imdb);
+        let movies = Store.getMovies();
+
+        movies.forEach((movie, index) => {
+            if(movie.imdb === imdb){
+                movies.splice(index, 1);
+            }
+        });
+
+        localStorage.setItem('movies', JSON.stringify(movies));
+    }
+
+    
+}
+
+
+document.addEventListener('DOMContentLoaded', Store.displayMovie);
+
 //event listener for add 
 document.getElementById('movie-form').addEventListener('submit', (e) =>{
     const title = document.getElementById('title').value;
@@ -87,8 +142,13 @@ document.getElementById('movie-form').addEventListener('submit', (e) =>{
         //add movie to list
         ui.addMovie(movie);
 
+        //add movie to LS
+        Store.addMovie(movie);
+
+        //show successful alert to the user 
         ui.showAlert(`Movie ${movie.title} added!`, 'success')
         
+        //clear fields
         ui.clearFields();
     }
 
@@ -102,8 +162,12 @@ document.getElementById('movie-list').addEventListener('click', (e) => {
 
     const ui = new UI();
 
-    
+    //remove movie from db
     ui.removeMovie(e.target);
+
+    //remove movie from LS
+    // console.log(e.target.parentElement.previousElementSibling.textContent);
+    Store.removeMovie(e.target.parentElement.previousElementSibling.textContent);
 
     ui.showAlert('Movie removed!', 'success')
 
